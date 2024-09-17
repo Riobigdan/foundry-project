@@ -2,16 +2,17 @@
 pragma solidity ^0.8.18;
 import {PriceLibrary} from "./PriceLibrary.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/v0.8/interfaces/AggregatorV3Interface.sol";
+import {console2} from "forge-std/console2.sol";
 
 contract FundMe {
-    error NotOwner();
     using PriceLibrary for uint256; 
-    uint256 public constant MINIMUM_USD = 1;
-    address[] public funders;
-    mapping(address => uint256) public addressToAmountFunded;
-    uint256 public totalFunds;
-    address public immutable i_owner;
+    error NotOwner();
     AggregatorV3Interface public a_priceFeed;
+    uint256 public constant MINIMUM_USD = 1;
+    uint256 public s_totalFunds;
+    address[] public s_funders;
+    mapping(address => uint256) public s_addressToAmountFunded;
+    address public immutable i_owner;
 
     constructor(address priceFeed){
         i_owner = msg.sender;
@@ -22,17 +23,28 @@ contract FundMe {
         return MINIMUM_USD;
     }
 
-    function fund() public payable{
-        require(PriceLibrary.getConversionRate(msg.value, a_priceFeed) >= MINIMUM_USD, "Not enough ETH");
-        funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] += msg.value;
+    function usdToETH(uint256 a_usdAmount) public view returns (uint256){
+        uint256 amountToUse = a_usdAmount == 0 ? MINIMUM_USD : a_usdAmount;
+        return PriceLibrary.usdToEth(amountToUse, a_priceFeed);
     }
+
+    function usdToWei(uint256 a_usdAmount) public view returns (uint256){
+    }
+
+    function fund() public payable{
+        uint256 minAmount = usdToETH(MINIMUM_USD)*1e18;
+        require(msg.value >= minAmount, "Not enough ETH");
+        s_funders.push(msg.sender);
+        s_addressToAmountFunded[msg.sender] += msg.value;
+        s_totalFunds += msg.value;
+    }
+
     function withDraw() public onlyOwner{
-        for(uint256 i = 0; i < funders.length; i++){
-            address funder = funders[i];
-            addressToAmountFunded[funder] = 0;
+        for(uint256 i = 0; i < s_funders.length; i++){
+            address funder = s_funders[i];
+            s_addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0);
+        s_funders = new address[](0);
     }
 
     function getPrice() public view returns (uint256){
@@ -52,6 +64,14 @@ contract FundMe {
 
     fallback() external payable{
         fund();
+    }
+
+    function getAddressToAmountFunded(address a_funderAddress) public view returns (uint256){
+        return s_addressToAmountFunded[a_funderAddress];
+    }
+
+    function getFunder(uint256 index) public view returns (address){
+        return s_funders[index];
     }
 }
 

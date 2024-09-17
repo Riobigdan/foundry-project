@@ -7,7 +7,7 @@ import {HelperConfig} from "./HelperConfig.s.sol";
 import {console} from "forge-std/console.sol";
 contract DeployFundMe is Script{
     function run() external returns (FundMe){
-        vm.createSelectFork("sepolia");
+        vm.createSelectFork("anvil");
         HelperConfig helperConfig = new HelperConfig();
         address ethPriceFeed = helperConfig.activeNetworkConfig();
         vm.startBroadcast();
