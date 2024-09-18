@@ -53,6 +53,17 @@ contract FundMe {
         require(success, "Failed to send ETH");
     }
 
+    function withdrawCheaper() public onlyOwner{
+        uint256 fundersCount = s_funders.length;
+        for(uint256 i = 0; i < fundersCount; i++){
+            address funder = s_funders[i];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        s_funders = new address[](0);
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Failed to send ETH");
+    }
+
     function getPrice() public view returns (uint256){
         return PriceLibrary.getPrice(a_priceFeed);
     }
