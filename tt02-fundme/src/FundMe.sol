@@ -11,12 +11,16 @@ contract FundMe {
     uint256 public constant MINIMUM_USD = 1;
     uint256 public s_totalFunds;
     address[] public s_funders;
-    mapping(address => uint256) public s_addressToAmountFunded;
-    address public immutable i_owner;
+    mapping(address => uint256) private s_addressToAmountFunded;
+    address private immutable i_owner;
 
     constructor(address priceFeed){
         i_owner = msg.sender;
         a_priceFeed = AggregatorV3Interface(priceFeed);
+    }
+
+    function getOwner() public view returns (address){
+        return i_owner;
     }
 
     function getMinimumUSD() public pure returns (uint256){
@@ -32,7 +36,7 @@ contract FundMe {
     }
 
     function fund() public payable{
-        uint256 minAmount = usdToETH(MINIMUM_USD)*1e18;
+        uint256 minAmount = usdToETH(MINIMUM_USD)*1e10;  //注意这个1e10，因为priceFeed返回的是8位小数
         require(msg.value >= minAmount, "Not enough ETH");
         s_funders.push(msg.sender);
         s_addressToAmountFunded[msg.sender] += msg.value;
@@ -45,6 +49,8 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Failed to send ETH");
     }
 
     function getPrice() public view returns (uint256){
