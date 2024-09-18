@@ -10,3 +10,6 @@
 [submodule "tt02-fundme/lib/chainlink-brownie-contracts"]
 	path = tt02-fundme/lib/chainlink-brownie-contracts
 	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "tt02-fundme/lib/foundry-devops"]
+	path = tt02-fundme/lib/foundry-devops
+	url = https://github.com/Cyfrin/foundry-devops

@@ -31,6 +31,11 @@ FundMe 是一个基于以太坊的众筹智能合约。它允许用户以 ETH �
 ```zsh
 forge test
 forge script script/DeployFundMe.s.sol --account Default --broadcast
+
+forge install Cyfrin/foundry-devops --no-commit
+forge script script/Interactions.s.sol --account Default --broadcast
+
+# 在tt02-fundme/script/DeployFundMe.s.sol 编辑测试环境
 ```
 
 ## 注意事项
