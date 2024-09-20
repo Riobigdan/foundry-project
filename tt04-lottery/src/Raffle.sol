@@ -16,7 +16,14 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     /* Errors */
     error Raffle__NotEnoughEthSent();
-    error Raffle__TooEarly();
+    error Raffle__TooEarly(
+        uint256 currentTime,
+        uint256 lastTimeStamp,
+        RaffleState raffleState,
+        uint256 balance,
+        uint256 raffleStateUint,
+        uint256 playersLength
+    );
     error Raffle__TransferFailed();
     error Raffle__RaffleNotOpen();
 
@@ -89,24 +96,54 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * 2. 有玩家
      * 3. 有足够的 ETH
      * 4. 开奖状态
-     * @param checkData 检查数据
      * @return upkeepNeeded 是否需要开奖
      * @return callData 回调函数数据
      */
-    function checkUpkeep(bytes calldata checkData) public view returns (bool upkeepNeeded, bytes memory callData) {
+    function checkUpkeep(bytes calldata /* checkData */ )
+        public
+        view
+        returns (bool upkeepNeeded, bytes memory callData)
+    {
         bool timePassed = ((block.timestamp - s_lastTimeStamp) >= i_interval);
         bool isOpen = s_raffleState == RaffleState.OPEN;
         bool hasBalance = address(this).balance > 0;
         bool hasPlayers = s_players.length > 0;
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
-        return (upkeepNeeded, checkData);
+        return (upkeepNeeded, "");
     }
 
-    
+    /**
+     * @dev 由 checkUpkeep检查 ChainLink automation 调用
+     */
+    function performUpkeep(bytes calldata performData) external {
+        (bool upkeepNeeded,) = checkUpkeep(performData);
+        if (!upkeepNeeded) {
+            revert Raffle__TooEarly(
+                block.timestamp,
+                s_lastTimeStamp,
+                s_raffleState,
+                address(this).balance,
+                uint256(s_raffleState),
+                s_players.length
+            );
+        }
+        pickWinner();
+    }
 
-    function pickWinner() external returns (uint256 requestId) {
+    /**
+     * @dev 开奖
+     * @return requestId 请求 id
+     */
+    function pickWinner() private returns (uint256 requestId) {
         if (block.timestamp - s_lastTimeStamp < i_interval) {
-            revert Raffle__TooEarly();
+            revert Raffle__TooEarly(
+                block.timestamp,
+                s_lastTimeStamp,
+                s_raffleState,
+                address(this).balance,
+                uint256(s_raffleState),
+                s_players.length
+            );
         }
         s_raffleState = RaffleState.CALCULATING;
         /**
@@ -134,20 +171,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     /**
      * @dev 回调函数 由 VRFCoordinator 调用 rawFulfillRandomWords
-     * @param requestId 请求 id
      * @param randomWords 随机数 calldata 数组
      */
-    function fulfillRandomWords(uint256 requestId, uint256[] calldata randomWords) internal override {
-        /**
-         * @dev Check
-         */
+    function fulfillRandomWords(uint256, /* requestId */ uint256[] calldata randomWords) internal override {
         if (s_raffleState != RaffleState.CALCULATING) {
             revert Raffle__RaffleNotOpen();
         }
 
-        /**
-         * @dev Effect
-         */
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address payable recentWinner = s_players[indexOfWinner];
         s_recentWinner = recentWinner; // 这里的 s_recentWinner 不是payable类型，所以需要使用 payable(s_recentWinner) 来赋值
@@ -156,9 +186,6 @@ contract Raffle is VRFConsumerBaseV2Plus {
         s_lastTimeStamp = block.timestamp;
         emit WinnerPicked(recentWinner);
 
-        /**
-         * @dev Interaction
-         */
         (bool success,) = recentWinner.call{value: address(this).balance}("");
         if (!success) {
             revert Raffle__TransferFailed();
