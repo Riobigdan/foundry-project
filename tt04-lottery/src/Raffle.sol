@@ -78,6 +78,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
         s_lastTimeStamp = block.timestamp;
     }
 
+    /**
+     * @dev 进入抽奖
+     * 1. 检查入场费是否足够
+     * 2. 检查开奖状态是否为 OPEN
+     * 3. 将玩家添加到玩家列表中
+     * 4. 发射事件
+     */
     function enterRaffle() external payable {
         if (msg.value < i_entranceFee) {
             revert Raffle__NotEnoughEthSent();
