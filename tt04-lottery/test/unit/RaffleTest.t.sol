@@ -20,15 +20,40 @@ import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
 
 contract RaffleTest is Test {
-    uint256 public constant STARTING_USER_BALANCE = 1 ether;
+    uint256 entranceFee;
+    uint256 interval;
+    address vrfCoordinator;
+    bytes32 gasLane;
+    uint32 callbackGasLimit;
+    uint256 subscriptionId;
 
     Raffle raffle;
     HelperConfig helperConfig;
-
     address public PLAYER = makeAddr("player");
+    uint256 public constant STARTING_USER_BALANCE = 1 ether;
 
     function setUp() public {
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployContract();
+        HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
+        (
+            entranceFee,
+            interval,
+            vrfCoordinator,
+            gasLane,
+            callbackGasLimit,
+            subscriptionId
+        ) = (
+            config.entranceFee,
+            config.interval,
+            config.vrfCoordinator,
+            config.gasLane,
+            config.callbackGasLimit,
+            config.subscriptionId
+        );
+    }
+
+    function test_raffleInitialState() public view {
+        assert(raffle.getRaffleState() == Raffle.RaffleState.OPEN);
     }
 }
