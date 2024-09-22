@@ -33,6 +33,7 @@ contract RaffleTest is Test {
     uint256 public constant STARTING_USER_BALANCE = 1 ether;
 
     function setUp() public {
+        vm.deal(PLAYER, STARTING_USER_BALANCE);
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployContract();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
@@ -58,6 +59,19 @@ contract RaffleTest is Test {
     }
 
     /*/////////////////////////////////////////////////////////////////////
-                            测试输入 Header 的 Snappst
+                            Enter Raffle
     /////////////////////////////////////////////////////////////////////*/
+    function test_enterRaffleRevertWhenNotEnoughEth() public {
+        vm.prank(PLAYER);
+        vm.expectRevert(Raffle.Raffle__NotEnoughEthSent.selector);
+        raffle.enterRaffle{value: entranceFee - 1}();
+    }
+
+    function test_RafflePlayersArrayChangesWhenEnter() public {
+        vm.prank(PLAYER);
+
+        raffle.enterRaffle{value: entranceFee + 1}();
+        address player = raffle.getPlayer(0);
+        assertEq(player, PLAYER);
+    }
 }
