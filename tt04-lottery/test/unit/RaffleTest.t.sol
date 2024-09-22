@@ -15,7 +15,7 @@
 pragma solidity ^0.8.20;
 
 import {Raffle} from "src/Raffle.sol";
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
 
@@ -80,6 +80,22 @@ contract RaffleTest is Test {
         vm.expectEmit(true, true, false, false, address(raffle)); // 最多 4 个 index 事件 一个就代表一个 true
         emit Raffle.RaffleEntered(PLAYER);
         // emit Raffle.RaffleEntered(address(raffle)); // 这里会报错 因为 emit 的参数类型不对 期望的是 player 的地址
+        raffle.enterRaffle{value: entranceFee + 1}();
+    }
+
+    function test_notAllowPlayerEnterWhenRaffleIsCalculating() public {
+        vm.prank(PLAYER);
+
+        raffle.enterRaffle{value: entranceFee + 1}();
+        console.log(block.timestamp);
+        console.log(block.number);
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        console.log(block.timestamp);
+        console.log(block.number);
+
+        vm.expectRevert(Raffle.Raffle__RaffleNotOpen.selector);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee + 1}();
     }
 }

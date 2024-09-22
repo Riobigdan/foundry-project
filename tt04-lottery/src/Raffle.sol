@@ -84,6 +84,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * 2. 检查开奖状态是否为 OPEN
      * 3. 将玩家添加到玩家列表中
      * 4. 发射事件
+     * error Raffle__NotEnoughEthSent 入场费不足
+     * error Raffle__RaffleNotOpen 开奖状态不对
      */
     function enterRaffle() external payable {
         if (msg.value < i_entranceFee) {
