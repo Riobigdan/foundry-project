@@ -74,4 +74,12 @@ contract RaffleTest is Test {
         address player = raffle.getPlayer(0);
         assertEq(player, PLAYER);
     }
+
+    function test_RaffleEnteredEventIsEmitedWhenEnter() public {
+        vm.prank(PLAYER);
+        vm.expectEmit(true, true, false, false, address(raffle)); // 最多 4 个 index 事件 一个就代表一个 true
+        emit Raffle.RaffleEntered(PLAYER);
+        // emit Raffle.RaffleEntered(address(raffle)); // 这里会报错 因为 emit 的参数类型不对 期望的是 player 的地址
+        raffle.enterRaffle{value: entranceFee + 1}();
+    }
 }
