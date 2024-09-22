@@ -56,4 +56,8 @@ contract RaffleTest is Test {
     function test_raffleInitialState() public view {
         assert(raffle.getRaffleState() == Raffle.RaffleState.OPEN);
     }
+
+    /*/////////////////////////////////////////////////////////////////////
+                            测试输入 Header 的 Snappst
+    /////////////////////////////////////////////////////////////////////*/
 }
