@@ -6,7 +6,7 @@
 forge install smartcontractkit/chainlink-brownie-contracts --no-commit
 ```
 
-# 去中心化抽奖合约
+## 去中心化抽奖合约
 
 这是一个基于 Chainlink VRF 的去中心化抽奖智能合约。
 

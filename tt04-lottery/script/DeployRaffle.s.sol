@@ -3,10 +3,11 @@ pragma solidity ^0.8.19;
 
 import {Raffle} from "../src/Raffle.sol";
 import {Script} from "forge-std/Script.sol";
+import {HelperConfig} from "./HelperConfig.s.sol";
 
 contract DeployRaffle is Script {
     function deployRaffle() public {
-        // HelperConfig helperConfig = new HelperConfig();
+        HelperConfig helperConfig = new HelperConfig();
 
         vm.startBroadcast();
         new Raffle(
