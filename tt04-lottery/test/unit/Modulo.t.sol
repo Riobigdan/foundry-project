@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {Modulo} from "../src/Modulo.sol";
+import {Modulo} from "src/Modulo.sol";
 
 contract ModuloTest is Test {
     Modulo modulo;
