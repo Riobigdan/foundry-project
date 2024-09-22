@@ -20,10 +20,10 @@ contract HelperConfig is Script, CodeChainCode {
         uint256 entranceFee;
         uint256 interval;
         address vrfCoordinator; // 链上vrfCoordinator地址
-        address link;
         bytes32 gasLane;
         uint32 callbackGasLimit;
         uint256 subscriptionId;
+        // address link;
     }
 
     /* @Errors */
@@ -32,6 +32,7 @@ contract HelperConfig is Script, CodeChainCode {
     NetworkConfig public localNetworkConfig;
     mapping(uint256 => NetworkConfig) public networkConfig;
 
+    /* @constructor */
     constructor() {
         networkConfig[SEPOLIA_CHAIN_ID] = getSepoliaConfig();
     }
@@ -53,16 +54,20 @@ contract HelperConfig is Script, CodeChainCode {
         }
     }
 
+    function getConfig() public returns (NetworkConfig memory) {
+        return getConfigByChainId(block.chainid);
+    }
+
     function getSepoliaConfig() public pure returns (NetworkConfig memory) {
         return
             NetworkConfig({
                 entranceFee: 0.01 ether,
                 interval: 30,
                 vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
-                link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
                 gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
                 subscriptionId: 0,
                 callbackGasLimit: 500000
+                // link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
             });
     }
 
@@ -89,10 +94,10 @@ contract HelperConfig is Script, CodeChainCode {
             entranceFee: 0.01 ether,
             interval: 30,
             vrfCoordinator: address(vrfCoordinator),
-            link: address(0),
             gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             subscriptionId: 0,
             callbackGasLimit: 500000
+            // link: address(0),
         });
         return localNetworkConfig;
     }

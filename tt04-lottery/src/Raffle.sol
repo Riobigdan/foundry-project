@@ -67,8 +67,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 interval,
         address vrfCoordinator,
         bytes32 gasLane,
-        uint256 subscriptionId,
-        uint32 callbackGasLimit
+        uint32 callbackGasLimit,
+        uint256 subscriptionId
     ) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
@@ -106,11 +106,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @return upkeepNeeded 是否需要开奖
      * @return callData 回调函数数据
      */
-    function checkUpkeep(bytes calldata /* checkData */ )
-        public
-        view
-        returns (bool upkeepNeeded, bytes memory callData)
-    {
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    ) public view returns (bool upkeepNeeded, bytes memory callData) {
         bool timePassed = ((block.timestamp - s_lastTimeStamp) >= i_interval);
         bool isOpen = s_raffleState == RaffleState.OPEN;
         bool hasBalance = address(this).balance > 0;
@@ -123,7 +121,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @dev 由 checkUpkeep检查 ChainLink automation 调用
      */
     function performUpkeep(bytes calldata performData) external {
-        (bool upkeepNeeded,) = checkUpkeep(performData);
+        (bool upkeepNeeded, ) = checkUpkeep(performData);
         if (!upkeepNeeded) {
             revert Raffle__TooEarly(
                 block.timestamp,
@@ -162,17 +160,18 @@ contract Raffle is VRFConsumerBaseV2Plus {
          * @param numWords 随机数个数
          * @param extraArgs is the extra arguments
          */
-        VRFV2PlusClient.RandomWordsRequest memory req = VRFV2PlusClient.RandomWordsRequest({
-            keyHash: i_keyHash,
-            subId: i_subscriptionId,
-            requestConfirmations: REQUEST_CONFIRMATIONS,
-            callbackGasLimit: i_callbackGasLimit,
-            numWords: NUM_WORDS,
-            extraArgs: VRFV2PlusClient._argsToBytes(
-                // 使用 native payment 支付 gas 比如 0.1 LINK
-                VRFV2PlusClient.ExtraArgsV1({nativePayment: true})
-            )
-        });
+        VRFV2PlusClient.RandomWordsRequest memory req = VRFV2PlusClient
+            .RandomWordsRequest({
+                keyHash: i_keyHash,
+                subId: i_subscriptionId,
+                requestConfirmations: REQUEST_CONFIRMATIONS,
+                callbackGasLimit: i_callbackGasLimit,
+                numWords: NUM_WORDS,
+                extraArgs: VRFV2PlusClient._argsToBytes(
+                    // 使用 native payment 支付 gas 比如 0.1 LINK
+                    VRFV2PlusClient.ExtraArgsV1({nativePayment: true})
+                )
+            });
         requestId = s_vrfCoordinator.requestRandomWords(req);
     }
 
@@ -180,7 +179,10 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @dev 回调函数 由 VRFCoordinator 调用 rawFulfillRandomWords
      * @param randomWords 随机数 calldata 数组
      */
-    function fulfillRandomWords(uint256, /* requestId */ uint256[] calldata randomWords) internal override {
+    function fulfillRandomWords(
+        uint256,
+        /* requestId */ uint256[] calldata randomWords
+    ) internal override {
         if (s_raffleState != RaffleState.CALCULATING) {
             revert Raffle__RaffleNotOpen();
         }
@@ -193,7 +195,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         s_lastTimeStamp = block.timestamp;
         emit WinnerPicked(recentWinner);
 
-        (bool success,) = recentWinner.call{value: address(this).balance}("");
+        (bool success, ) = recentWinner.call{value: address(this).balance}("");
         if (!success) {
             revert Raffle__TransferFailed();
         }

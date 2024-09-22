@@ -6,19 +6,22 @@ import {Script} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 
 contract DeployRaffle is Script {
-    function deployRaffle() public {
-        HelperConfig helperConfig = new HelperConfig();
+    function run() external {}
+
+    function deployContract() public returns (Raffle, HelperConfig) {
+        HelperConfig helperconfig = new HelperConfig();
+        HelperConfig.NetworkConfig memory config = helperconfig.getConfig();
 
         vm.startBroadcast();
-        new Raffle(
-            helperConfig.getVrfCoordinator(),
-            helperConfig.getLinkToken(),
-            helperConfig.getGasLane(),
-            helperConfig.getSubscriptionId(),
-            helperConfig.getCallbackGasLimit()
+        Raffle raffle = new Raffle(
+            config.entranceFee,
+            config.interval,
+            config.vrfCoordinator,
+            config.gasLane,
+            config.callbackGasLimit,
+            config.subscriptionId
         );
         vm.stopBroadcast();
+        return (raffle, helperconfig);
     }
-
-    function run() external {}
 }
