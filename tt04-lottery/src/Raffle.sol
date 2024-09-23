@@ -14,8 +14,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
     /* Library */
     using VRFV2PlusClient for VRFV2PlusClient.RandomWordsRequest;
 
-    /* Errors */
     error Raffle__NotEnoughEthSent();
+    error Raffle__TransferFailed();
+    error Raffle__RaffleNotOpen();
     error Raffle__TooEarly(
         uint256 currentTime,
         uint256 lastTimeStamp,
@@ -24,8 +25,6 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 raffleStateUint,
         uint256 playersLength
     );
-    error Raffle__TransferFailed();
-    error Raffle__RaffleNotOpen();
 
     /* Type Declarations */
     enum RaffleState {
