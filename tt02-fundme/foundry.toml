@@ -2,7 +2,7 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-ffi=true
+ffi = true
 fs_permissions = [{ access = "read", path = "./broadcast" }]
 remappings = [
   '@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/src/',
@@ -11,4 +11,3 @@ remappings = [
 mainnet = "https://eth-mainnet.g.alchemy.com/v2/5VFdaww5aOIaM4i2D6FvqozH_vE13ecE"
 sepolia = "https://eth-sepolia.g.alchemy.com/v2/t6fzcdOOsB7zEPhV7CMRBlbtUEybtNLg"
 anvil = "http://127.0.0.1:8545"
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

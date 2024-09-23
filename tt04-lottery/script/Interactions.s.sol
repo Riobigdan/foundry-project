@@ -76,4 +76,8 @@ contract FundSubscription is Script, CodeChainCode {
             vm.stopBroadcast();
         }
     }
+
+    function run() external {
+        fundSubscriptionUsingConfig();
+    }
 }
