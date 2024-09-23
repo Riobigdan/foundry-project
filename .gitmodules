@@ -28,3 +28,6 @@
 [submodule "tt04-lottery/lib/forge-std"]
 	path = tt04-lottery/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "tt04-lottery/lib/solmate"]
+	path = tt04-lottery/lib/solmate
+	url = https://github.com/transmissions11/solmate

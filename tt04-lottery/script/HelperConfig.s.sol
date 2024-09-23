@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
+import {LinkToken} from "test/mocks/LinkToken.sol";
 
 abstract contract CodeChainCode {
     uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
@@ -23,7 +24,7 @@ contract HelperConfig is Script, CodeChainCode {
         bytes32 gasLane;
         uint32 callbackGasLimit;
         uint256 subscriptionId;
-        // address link;
+        address link;
     }
 
     /* @Errors */
@@ -42,9 +43,7 @@ contract HelperConfig is Script, CodeChainCode {
      * @param chainId 链id
      * @return NetworkConfig 网络配置
      */
-    function getConfigByChainId(
-        uint256 chainId
-    ) public returns (NetworkConfig memory) {
+    function getConfigByChainId(uint256 chainId) public returns (NetworkConfig memory) {
         if (networkConfig[chainId].vrfCoordinator != address(0)) {
             return networkConfig[chainId];
         } else if (chainId == ANVIL_CHAIN_ID) {
@@ -59,16 +58,15 @@ contract HelperConfig is Script, CodeChainCode {
     }
 
     function getSepoliaConfig() public pure returns (NetworkConfig memory) {
-        return
-            NetworkConfig({
-                entranceFee: 0.01 ether,
-                interval: 30,
-                vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
-                gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
-                subscriptionId: 0,
-                callbackGasLimit: 500000
-                // link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
-            });
+        return NetworkConfig({
+            entranceFee: 0.01 ether,
+            interval: 30,
+            vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
+            gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
+            subscriptionId: 84197343675464504425414728616412005354770664351257355224211786028223568062920,
+            callbackGasLimit: 500000,
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+        });
     }
 
     /**
@@ -88,6 +86,9 @@ contract HelperConfig is Script, CodeChainCode {
             ANVIL_GAS_PRICE, // gasPrice
             ANVIL_WEI_PER_UNIT_LINK // weiPerUnitLink
         );
+        // @dev Deploy Link Token
+        LinkToken linkToken = new LinkToken();
+
         vm.stopBroadcast();
 
         localNetworkConfig = NetworkConfig({
@@ -96,8 +97,8 @@ contract HelperConfig is Script, CodeChainCode {
             vrfCoordinator: address(vrfCoordinator),
             gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             subscriptionId: 0,
-            callbackGasLimit: 500000
-            // link: address(0),
+            callbackGasLimit: 500000,
+            link: address(linkToken)
         });
         return localNetworkConfig;
     }
