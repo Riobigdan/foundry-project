@@ -7,10 +7,13 @@ import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VR
 import {LinkToken} from "test/mocks/LinkToken.sol";
 
 abstract contract CodeChainCode {
+    /*/////////////////////////////////////////////////////////////////////
+                                constants
+    /////////////////////////////////////////////////////////////////////*/
+
     uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
     uint256 public constant ANVIL_CHAIN_ID = 31337;
 
-    // @dev VRF Mock Value
     uint96 public constant ANVIL_BASE_FEE = 0.25 ether;
     uint96 public constant ANVIL_GAS_PRICE = 1e9;
     int256 public constant ANVIL_WEI_PER_UNIT_LINK = 1e18;
@@ -20,20 +23,22 @@ contract HelperConfig is Script, CodeChainCode {
     struct NetworkConfig {
         uint256 entranceFee;
         uint256 interval;
-        address vrfCoordinator; // 链上vrfCoordinator地址
+        address vrfCoordinator;
         bytes32 gasLane;
         uint32 callbackGasLimit;
         uint256 subscriptionId;
         address link;
     }
 
-    /* @Errors */
+    /*/////////////////////////////////////////////////////////////////////
+                                Errors
+    /////////////////////////////////////////////////////////////////////*/
+
     error HelperConfig__NetworkNotConfigured(uint256 chainId);
 
     NetworkConfig public localNetworkConfig;
     mapping(uint256 => NetworkConfig) public networkConfig;
 
-    /* @constructor */
     constructor() {
         networkConfig[SEPOLIA_CHAIN_ID] = getSepoliaConfig();
     }
@@ -44,6 +49,7 @@ contract HelperConfig is Script, CodeChainCode {
 
     /**
      * @dev 根据chainId获取网络配置
+     *
      * @param chainId 链id
      * @return NetworkConfig 网络配置
      */
@@ -71,6 +77,7 @@ contract HelperConfig is Script, CodeChainCode {
 
     /**
      * @dev 获取anvil配置
+     *
      * @return NetworkConfig 网络配置
      * @notice
      * 配置 Mock VRFCoordinator (VRFCoordinator 是 Chainlink 的合约 用于管理 VRF 的请求和响应)
@@ -94,10 +101,10 @@ contract HelperConfig is Script, CodeChainCode {
         localNetworkConfig = NetworkConfig({
             entranceFee: 0.01 ether,
             interval: 30,
+            callbackGasLimit: 500000,
             vrfCoordinator: address(vrfCoordinator),
             gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             subscriptionId: 0,
-            callbackGasLimit: 500000,
             link: address(linkToken)
         });
         return localNetworkConfig;

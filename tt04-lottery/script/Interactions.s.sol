@@ -50,7 +50,7 @@ contract CreateSubscription is Script {
  * @dev ref https://docs.chain.link/docs/vrf/v2/subscription/fund-a-subscription/
  */
 contract FundSubscription is Script, CodeChainCode {
-    uint256 public constant FUND_AMOUNT = 0.001 ether; // Adjusted amount based on the balance
+    uint256 public constant FUND_AMOUNT = 3 ether;
 
     function fundSubscriptionUsingConfig() public {
         HelperConfig helperConfig = new HelperConfig();
@@ -72,7 +72,6 @@ contract FundSubscription is Script, CodeChainCode {
             vm.stopBroadcast();
         } else {
             vm.startBroadcast();
-            console2.log("Current balance:", LinkToken(linkToken).balanceOf(address(this)));
             LinkToken(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
             vm.stopBroadcast();
         }

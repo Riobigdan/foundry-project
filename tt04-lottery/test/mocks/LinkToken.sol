@@ -15,22 +15,31 @@ interface ERC677Receiver {
 
 /**
  * @title LinkToken
- * @author
  * @notice LinkToken 继承自 ERC20，这是一个标准的代币实现，提供了基本的代币功能如余额追踪和转账。
  */
 contract LinkToken is ERC20 {
     uint256 constant INITIAL_SUPPLY = 1000000000000000000;
     uint8 constant DECIMALS = 18;
+    /*////////////////////////////////////////////////////////////////
+                                Events
+    ////////////////////////////////////////////////////////////////*/
 
-    /**
-     * @notice 构造函数，初始化代币供应量
-     */
+    event Transfer(address indexed from, address indexed to, uint256 value, bytes data);
+
+    /*////////////////////////////////////////////////////////////////
+                                Constructor
+    ////////////////////////////////////////////////////////////////*/
+
     constructor() ERC20("Chainlink Token", "LINK", DECIMALS) {
         _mint(msg.sender, INITIAL_SUPPLY);
     }
 
+    /*////////////////////////////////////////////////////////////////
+                                Functions
+    ////////////////////////////////////////////////////////////////*/
+
     /**
-     * @notice 铸造代币
+     * @notice public 铸造代币
      * @param to 接收代币的地址
      * @param amount 铸造的代币数量
      */
@@ -39,14 +48,18 @@ contract LinkToken is ERC20 {
     }
 
     /**
-     * @notice 转移代币并调用回调函数
-     * @param to 接收代币的地址
-     * @param amount 转移的代币数量
-     * @param data 回调函数的数据
+     * @notice public 转移代币并调用回调函数
+     * @param _to 接收代币的地址
+     * @param _amount 转移的代币数量
+     * @param _data 回调函数的数据
      * @return 是否成功转移代币
      */
-    function transferAndCall(address to, uint256 amount, bytes calldata data) public returns (bool) {
-        ERC677Receiver(to).onTokenTransfer(msg.sender, amount, data);
+    function transferAndCall(address _to, uint256 _amount, bytes memory _data) public virtual returns (bool) {
+        super.transfer(_to, _amount);
+        emit Transfer(msg.sender, _to, _amount, _data);
+        if (isContract(_to)) {
+            contractFallback(_to, _amount, _data);
+        }
         return true;
     }
 
@@ -61,7 +74,7 @@ contract LinkToken is ERC20 {
     }
 
     /**
-     * @notice 判断地址是否为合约
+     * @notice public 判断地址是否为合约
      * @param account 要判断的地址
      * @return 是否为合约
      */
