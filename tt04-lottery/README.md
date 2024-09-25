@@ -3,7 +3,16 @@
 ## 安装依赖
 
 ```shell
+rm -rf lib
 forge install smartcontractkit/chainlink-brownie-contracts --no-commit
+forge install foundry-rs/forge-std --no-commit
+forge install transmissions11/solmate --no-commit
+```
+
+```shell
+git clone https://github.com/Cyfrin/foundry-smart-contract-lottery-cu
+cd foundry-smart-contract-lottery-cu
+forge build
 ```
 
 ## 去中心化抽奖合约
