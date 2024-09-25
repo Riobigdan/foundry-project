@@ -50,16 +50,23 @@ contract CreateSubscription is Script {
  * @dev ref https://docs.chain.link/docs/vrf/v2/subscription/fund-a-subscription/
  */
 contract FundSubscription is Script, CodeChainCode {
-    uint256 public constant FUND_AMOUNT = 3 ether;
+    uint256 public constant FUND_AMOUNT = 3 ether; //3 Link
 
     function fundSubscriptionUsingConfig() public {
         HelperConfig helperConfig = new HelperConfig();
         address vrfCoordinator = helperConfig.getConfig().vrfCoordinator;
         uint256 subscriptionId = helperConfig.getConfig().subscriptionId;
-        address linkToken = helperConfig.getConfig().link;
-        fundSubscription(vrfCoordinator, subscriptionId, linkToken);
+        address link = helperConfig.getConfig().link;
+        fundSubscription(vrfCoordinator, subscriptionId, link);
     }
 
+    /**
+     * @notice Funds a subscription on the VRF Coordinator
+     * @dev This function funds a subscription on the VRF Coordinator and returns the subscription ID and the VRF Coordinator address
+     * @param vrfCoordinator The address of the VRF Coordinator
+     * @param subscriptionId The subscription ID
+     * @param linkToken The address of the LINK token
+     */
     function fundSubscription(address vrfCoordinator, uint256 subscriptionId, address linkToken) public {
         console2.log("Funding subscriptiono id:", subscriptionId);
         console2.log("Using vrfCoordinator:", vrfCoordinator);

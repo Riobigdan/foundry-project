@@ -88,7 +88,6 @@ contract HelperConfig is Script, CodeChainCode {
         if (localNetworkConfig.vrfCoordinator != address(0)) {
             return localNetworkConfig;
         }
-
         vm.startBroadcast();
         VRFCoordinatorV2_5Mock vrfCoordinator = new VRFCoordinatorV2_5Mock(
             ANVIL_BASE_FEE, // baseFee
@@ -96,6 +95,7 @@ contract HelperConfig is Script, CodeChainCode {
             ANVIL_WEI_PER_UNIT_LINK // weiPerUnitLink
         );
         LinkToken linkToken = new LinkToken();
+        linkToken.mint(address(vrfCoordinator), 1e21); // 铸造 1000 LINK
         vm.stopBroadcast();
 
         localNetworkConfig = NetworkConfig({

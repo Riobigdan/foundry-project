@@ -1,0 +1,365 @@
+{
+  // apc
+  "apc.electron": {
+    "frame": false,
+    "titleBarStyle": "hiddenInset"
+  },
+  "apc.stylesheet": {
+    ".editor .scrollbar. slider": "visibility: hidden",
+    ".windows": "font-family: 'Cartograph CF','Inter','Agave Nerd Font','MSYHLTTC', Consolas, 'Courier New', monospace; font-size: 12px"
+  },
+  // cursor
+  "cursor.aipreview.enabled": true,
+  "cursor.chat.alwaysSearchWeb": true,
+  "cursor.chat.premiumChatAutoScrollWhenAtBottom": true,
+  "cursor.chat.showSuggestedFiles": true,
+  "cursor.chat.smoothStreaming": true,
+  "cursor.cmdk.useThemedDiffBackground": true,
+  "cursor.cpp.disabledLanguages": [],
+  "cursor.cpp.enablePartialAccepts": true,
+  "cursor.diffs.useCharacterLevelDiffs": true,
+  "cursor.general.gitGraphIndexing": "enabled",
+
+  // editor
+  "editor.accessibilitySupport": "on",
+  "editor.cursorBlinking": "expand",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "'Cartograph CF', 'Agave Nerd Font','微软雅黑', Consolas, 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.fontWeight": "200",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.lineNumbers": "relative",
+  "editor.minimap.autohide": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.db": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.s3db": "${capture}.${extname}-*"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.http": "httpyac",
+    "*.txt": "json"
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 100,
+  "httpyac.responseViewExtensionRecognition": "mimetype",
+  "httpyac.responseViewLanguageMap": {
+    "json": "json",
+    "html": "html",
+    "xml": "xml",
+    "javascript": "javascript",
+    "css": "css",
+    "plain": "json",
+    "text/plain": "json"
+  },
+  "json.schemas": [],
+  "json.validate.enable": false,
+  "projectManager.any.baseFolders": ["$home/workspace"],
+  "projectManager.sortList": "Recent",
+  "solidity.formatter": "forge",
+  "solidity.telemetry": true,
+  "solidity-language-server.trace.server.verbosity": "message",
+  "supermaven.enable": {
+    "*": false
+  },
+  "thunder-client.saveTokenPerEnvironment": true,
+
+  // todohighlight
+  "todohighlight.defaultStyle": {
+    "color": "#000",
+    "backgroundColor": "#ffab00",
+    "overviewRulerColor": "#ffab00",
+    "cursor": "pointer",
+    "border": "1px solid #eee",
+    "borderRadius": "2px",
+    "isWholeLine": false
+  },
+  "todohighlight.exclude": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.vscode/**",
+    "**/.github/**",
+    "**/_output/**",
+    "**/*.min.*",
+    "**/*.map",
+    "**/.next/**"
+  ],
+  "todohighlight.include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.html",
+    "**/*.php",
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "todohighlight.isCaseSensitive": false,
+  "todohighlight.isEnable": true,
+  "todohighlight.keywords": [
+    "NOTE:",
+    "REVIEW:",
+    {
+      "text": "DEBUG:",
+      "color": "#ff0000",
+      "backgroundColor": "#292929",
+      "overviewRulerColor": "grey"
+    },
+    {
+      "text": "HACK:",
+      "color": "#000",
+      "isWholeLine": false
+    },
+    {
+      "text": "TODO:",
+      "color": "#00ff00",
+      "border": "1px solid green",
+      "backgroundColor": "#292929",
+      "borderRadius": "2px",
+      "isWholeLine": false
+    }
+  ],
+  "todohighlight.maxFilesForSearch": 5120,
+  "todohighlight.toggleURI": false,
+  "turboConsoleLog.addSemicolonInTheEnd": true,
+  "turboConsoleLog.includeFileNameAndLineNum": true,
+  "turboConsoleLog.logMessagePrefix": "🐛",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // vim
+  "vim.easymotion": true,
+  "vim.foldfix": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
+        }
+      ]
+    },
+    {
+      "before": ["<C-a>"],
+      "after": ["g", "g", "V", "G"]
+    },
+    {
+      "before": ["s"],
+      "commands": ["findJump.activate"]
+    },
+    {
+      "before": ["<C-v>"],
+      "commands": ["editor.action.clipboardPasteAction"]
+    },
+    {
+      "before": ["<C-c>"],
+      "commands": ["editor.action.clipboardCopyAction"]
+    },
+    {
+      "before": ["g", "t"],
+      "commands": ["editor.action.revealDefinition"]
+    },
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.referenceSearch.trigger"]
+    },
+    {
+      "before": ["g", "["],
+      "commands": ["workbench.action.navigateBack"]
+    },
+    {
+      "before": ["g", "]"],
+      "commands": ["workbench.action.navigateForward"]
+    },
+    {
+      "before": ["g", "b"],
+      "commands": ["editor.action.marker.prev"]
+    },
+    {
+      "before": ["g", "n"],
+      "commands": ["editor.action.marker.next"]
+    },
+    {
+      "before": ["g", "i"],
+      "commands": ["editor.action.quickFix"]
+    },
+    {
+      "before": ["g", "f"],
+      "commands": ["editor.action.formatDocument"]
+    }
+  ],
+  "vim.smartRelativeLine": true,
+  "vim.useSystemClipboard": true,
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
+        }
+      ]
+    },
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    },
+    {
+      "before": ["s"],
+      "commands": ["findJump.activate"]
+    },
+    {
+      "before": ["<C-v>"],
+      "commands": ["editor.action.clipboardPasteAction"]
+    },
+    {
+      "before": ["<C-c>"],
+      "commands": ["editor.action.clipboardCopyAction"]
+    }
+  ],
+  "vspacecode.bindingOverrides": [
+    {
+      "keys": "c.l",
+      "name": "Turbo Log",
+      "type": "command",
+      "command": "turboConsoleLog.displayLogMessage"
+    },
+    {
+      "keys": "p.s",
+      "name": "Save Project",
+      "type": "command",
+      "command": "projectManager.saveProject"
+    },
+    {
+      "keys": "p.l",
+      "name": "List Project",
+      "type": "command",
+      "command": "projectManager.listProjects"
+    },
+    {
+      "keys": "c.k",
+      "name": "Show Hover",
+      "type": "command",
+      "command": "editor.action.showHover"
+    },
+    {
+      "keys": "c.d",
+      "name": "🐕 Jump Definition",
+      "type": "command",
+      "command": "editor.action.revealDefinition"
+    },
+    {
+      "keys": "c.i",
+      "name": "🐶 Jump Implements",
+      "type": "command",
+      "command": "editor.action.goToImplementation"
+    },
+    {
+      "keys": "c.r",
+      "name": "🐱 跳转到引用",
+      "type": "command",
+      "command": "editor.action.goToReferences"
+    },
+    {
+      "keys": "c.b",
+      "name": "← navigation Back",
+      "type": "command",
+      "command": "workbench.action.navigateBack"
+    },
+    {
+      "keys": "c.p",
+      "name": "→ navigation Prve",
+      "type": "command",
+      "command": "workbench.action.navigateForward"
+    },
+    {
+      "keys": "c.a",
+      "name": "quick Fix",
+      "type": "command",
+      "command": "editor.action.quickFix"
+    },
+    {
+      "keys": "c.f",
+      "name": "format",
+      "type": "command",
+      "command": "editor.action.formatDocument"
+    },
+    {
+      "keys": "w.t",
+      "name": "打开终端",
+      "type": "command",
+      "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+      "keys": "f.f",
+      "name": "Find in Files",
+      "type": "command",
+      "command": "workbench.action.quickOpen"
+    },
+    {
+      "keys": "f.s",
+      "name": "find Symbol",
+      "type": "command",
+      "command": "workbench.action.showAllSymbols"
+    },
+    {
+      "keys": "w.e",
+      "name": "open tree",
+      "type": "command",
+      "command": "workbench.files.action.focusFilesExplorer"
+    }
+  ],
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "compact",
+  "workbench.colorTheme": "Ayu Mirage",
+  "workbench.iconTheme": "Monokai Pro Icons",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[solidity]": {
+    "editor.defaultFormatter": "NomicFoundation.hardhat-solidity"
+  }
+}
