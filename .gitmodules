@@ -31,3 +31,6 @@
 [submodule "tt04-lottery/lib/solmate"]
 	path = tt04-lottery/lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "tt04-lottery/lib/foundry-devops"]
+	path = tt04-lottery/lib/foundry-devops
+	url = https://github.com/cyfrin/foundry-devops
