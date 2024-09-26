@@ -6,6 +6,7 @@ import {Script, console2} from "forge-std/Script.sol";
 import {HelperConfig, CodeChainCode} from "./HelperConfig.s.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {LinkToken} from "test/mocks/LinkToken.sol";
+import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 
 /**
  * @title CreateSubscription
@@ -79,12 +80,52 @@ contract FundSubscription is Script, CodeChainCode {
             vm.stopBroadcast();
         } else {
             vm.startBroadcast();
+            // 获取合约的 LINK 余额
+
+            // 获取 VRFCoordinator 的 LINK 余额
+            uint256 coordinatorBalance = LinkToken(linkToken).balanceOf(vrfCoordinator);
+            console2.log(unicode"VRFCoordinator 的 LINK 余额:", coordinatorBalance);
+
+            // 如果合约余额不足，则报错
+            require(coordinatorBalance >= FUND_AMOUNT, unicode"合约 LINK 余额不足");
+
             LinkToken(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
             vm.stopBroadcast();
         }
     }
 
-    function run() external {
+    function run() public {
         fundSubscriptionUsingConfig();
+    }
+}
+
+/**
+ * @title AddConsumer
+ * @author rio
+ * @notice 本质是给订阅合约打钱 AddaCunsumer
+ * @dev ref https://docs.chain.link/docs/vrf/v2/subscription/fund-a-subscription/
+ */
+contract AddConsumer is Script {
+    // need Foundry Devops
+    function addConsumerUsingConfig(address mostRecentlyDeployed) public {
+        HelperConfig helperConfig = new HelperConfig();
+        address vrfCoordinator = helperConfig.getConfig().vrfCoordinator;
+        uint256 subscriptionId = helperConfig.getConfig().subscriptionId;
+        addConsumer(mostRecentlyDeployed, vrfCoordinator, subscriptionId);
+    }
+
+    function addConsumer(address mostRecentlyDeployed, address vrfCoordinator, uint256 subscriptionId) public {
+        console2.log("Adding consumer to subscription id:", subscriptionId);
+        console2.log("Using vrfCoordinator:", vrfCoordinator);
+        console2.log("Using mostRecentlyDeployed:", mostRecentlyDeployed);
+
+        vm.startBroadcast();
+        VRFCoordinatorV2_5Mock(vrfCoordinator).addConsumer(subscriptionId, mostRecentlyDeployed);
+        vm.stopBroadcast();
+    }
+
+    function run() external {
+        address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("Raffle", block.chainid);
+        addConsumerUsingConfig(mostRecentlyDeployed);
     }
 }

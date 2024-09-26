@@ -9,5 +9,5 @@ remappings = [
 ]
 [rpc_endpoints]
 mainnet = "https://eth-mainnet.g.alchemy.com/v2/5VFdaww5aOIaM4i2D6FvqozH_vE13ecE"
-sepolia = "https://eth-sepolia.g.alchemy.com/v2/t6fzcdOOsB7zEPhV7CMRBlbtUEybtNLg"
+sepolia = "https://eth-sepolia.g.alchemy.com/v2/5F9gIoOEujD4krY9z2ti0_lqaDASweF5"
 anvil = "http://127.0.0.1:8545"

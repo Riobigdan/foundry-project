@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 /**
-@dev Layout of contract
- version
- imports
- errors
- interfaces, libraries, contracts
- Type declarations
- State variables
- Events
- Modifiers
- Functions
-*/
-
-pragma solidity ^0.8.20;
+ * @dev Layout of contract
+ *  version
+ *  imports
+ *  errors
+ *  interfaces, libraries, contracts
+ *  Type declarations
+ *  State variables
+ *  Events
+ *  Modifiers
+ *  Functions
+ */
+pragma solidity ^0.8.19;
 
 import {Raffle} from "src/Raffle.sol";
 import {Test, console} from "forge-std/Test.sol";
@@ -37,14 +36,7 @@ contract RaffleTest is Test {
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployContract();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
-        (
-            entranceFee,
-            interval,
-            vrfCoordinator,
-            gasLane,
-            callbackGasLimit,
-            subscriptionId
-        ) = (
+        (entranceFee, interval, vrfCoordinator, gasLane, callbackGasLimit, subscriptionId) = (
             config.entranceFee,
             config.interval,
             config.vrfCoordinator,
@@ -85,17 +77,17 @@ contract RaffleTest is Test {
 
     function test_notAllowPlayerEnterWhenRaffleIsCalculating() public {
         vm.prank(PLAYER);
-
         raffle.enterRaffle{value: entranceFee + 1}();
-        console.log(block.timestamp);
-        console.log(block.number);
+
         vm.warp(block.timestamp + interval + 1);
         vm.roll(block.number + 1);
-        console.log(block.timestamp);
-        console.log(block.number);
 
-        vm.expectRevert(Raffle.Raffle__RaffleNotOpen.selector);
+        // 执行抽奖维护操作，此时抽奖状态应变为"计算中"
+        raffle.performUpkeep("");
+
+        // 再次进入抽奖，此时抽奖状态应为"计算中"，所以会报错
         vm.prank(PLAYER);
+        vm.expectRevert(Raffle.Raffle__RaffleNotOpen.selector);
         raffle.enterRaffle{value: entranceFee + 1}();
     }
 }
