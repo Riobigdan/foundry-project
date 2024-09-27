@@ -3,13 +3,14 @@ pragma solidity ^0.8.19;
 
 import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
-
+import {console2} from "forge-std/console2.sol";
 /**
  * @title Raffle
  * @author Rio
  * @notice This contract is for creating a decentralized raffle
  * @dev This implements Chainlink VRF to ensure fairness
  */
+
 contract Raffle is VRFConsumerBaseV2Plus {
     using VRFV2PlusClient for VRFV2PlusClient.RandomWordsRequest;
 
@@ -169,6 +170,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
             revert Raffle__RaffleNotOpen();
         }
 
+        require(address(this).balance > 0, "Contract has no balance");
+        require(s_players.length > 0, "No players in the raffle");
+
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address payable recentWinner = s_players[indexOfWinner];
         s_recentWinner = recentWinner; // 这里的 s_recentWinner 不是payable类型，所以需要使用 payable(s_recentWinner) 来赋值
@@ -177,10 +181,12 @@ contract Raffle is VRFConsumerBaseV2Plus {
         s_lastTimeStamp = block.timestamp;
         emit WinnerPicked(recentWinner);
 
+        console2.log("balance:", address(this).balance);
         (bool success,) = recentWinner.call{value: address(this).balance}("");
         if (!success) {
             revert Raffle__TransferFailed();
         }
+        console2.log("winner:", recentWinner);
     }
 
     /* Getter Functions */

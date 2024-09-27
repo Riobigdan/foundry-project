@@ -14,7 +14,7 @@
 pragma solidity ^0.8.19;
 
 import {Raffle} from "src/Raffle.sol";
-import {Test, console} from "forge-std/Test.sol";
+import {Test, console2} from "forge-std/Test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
@@ -187,6 +187,44 @@ contract RaffleTest is Test {
         // 借助 Mock 调用 fulfillRandomWords 函数
         vm.expectRevert(VRFCoordinatorV2_5Mock.InvalidRequest.selector);
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomNumber, address(raffle));
+    }
+
+    function test_FuilfilramdomWordsPicksAWinnerResetAndSendsMoney() public raffleEnteredAndTimePassed {
+        uint256 additionalEbtrants = 3; //4 total
+        uint256 startingIndex = 1;
+        address expectedWinner = address(2);
+        uint256 winnerStartingBalance = expectedWinner.balance;
+        console2.log("winnerStartingBalance:", winnerStartingBalance);
+
+        // 添加 3 个玩家
+        for (uint256 i = startingIndex; i < additionalEbtrants; i++) {
+            address player = address(uint160(i));
+            hoax(player, STARTING_USER_BALANCE);
+            raffle.enterRaffle{value: entranceFee}();
+        }
+
+        uint256 startingTimeStamp = raffle.getLastTimeStamp();
+
+        // vm log get request id
+        vm.recordLogs();
+        raffle.performUpkeep("");
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+        bytes32 requestId = entries[1].topics[1];
+        // use chainlink mock to generate a random number
+        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(uint256(requestId), address(raffle));
+
+        address winner = raffle.getRecentWinner();
+        Raffle.RaffleState state = raffle.getRaffleState();
+        uint256 winnerBalance = address(winner).balance;
+        console2.log("winnerBalance:", winnerBalance);
+        uint256 endingTimeStamp = raffle.getLastTimeStamp();
+        uint256 prize = entranceFee * (additionalEbtrants + 1);
+        console2.log("prize:", prize);
+
+        assertEq(winner, expectedWinner);
+        // assertEq(uint256(state), uint256(Raffle.RaffleState.CALCULATING));
+        assertEq(winnerBalance, winnerStartingBalance + prize);
+        assertEq(endingTimeStamp, startingTimeStamp + interval);
     }
 
     modifier raffleEnteredAndTimePassed() {

@@ -34,8 +34,6 @@ contract CreateSubscription is Script {
         uint256 subId = VRFCoordinatorV2_5Mock(vrfCoordinator).createSubscription();
         vm.stopBroadcast();
 
-        console2.log("Subscription ID:", subId);
-        console2.log("Update update the sub-ID in your helperConfig");
         return (subId, vrfCoordinator);
     }
 
@@ -76,19 +74,12 @@ contract FundSubscription is Script, CodeChainCode {
 
         if (block.chainid == ANVIL_CHAIN_ID) {
             vm.startBroadcast();
-            VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(subscriptionId, FUND_AMOUNT);
+            VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(subscriptionId, FUND_AMOUNT * 100);
             vm.stopBroadcast();
         } else {
             vm.startBroadcast();
-            // 获取合约的 LINK 余额
-
-            // 获取 VRFCoordinator 的 LINK 余额
             uint256 coordinatorBalance = LinkToken(linkToken).balanceOf(vrfCoordinator);
-            console2.log(unicode"VRFCoordinator 的 LINK 余额:", coordinatorBalance);
-
-            // 如果合约余额不足，则报错
             require(coordinatorBalance >= FUND_AMOUNT, unicode"合约 LINK 余额不足");
-
             LinkToken(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
             vm.stopBroadcast();
         }

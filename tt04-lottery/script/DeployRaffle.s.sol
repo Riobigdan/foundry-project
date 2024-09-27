@@ -21,10 +21,6 @@ contract DeployRaffle is Script {
             FundSubscription fundSubscription = new FundSubscription();
             fundSubscription.fundSubscription(config.vrfCoordinator, config.subscriptionId, config.link);
         }
-        // vrf create link (sepolia) https://vrf.chain.link/sepolia/new
-        // link token address doc https://docs.chain.link/docs/link-token-contracts/
-        // so Fund the token contract with link token
-        // 水龙头 https://faucets.chain.link/
         vm.startBroadcast();
         Raffle raffle = new Raffle(
             config.entranceFee,
