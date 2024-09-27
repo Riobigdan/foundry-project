@@ -41,6 +41,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestIdGenerated(uint256 indexed requestId);
 
     /**
      * @dev 构造函数
@@ -117,7 +118,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
                 block.timestamp, s_lastTimeStamp, address(this).balance, uint256(s_raffleState), s_players.length
             );
         }
-        pickWinner();
+        uint256 requestId = pickWinner();
+        emit RequestIdGenerated(requestId);
     }
 
     /**

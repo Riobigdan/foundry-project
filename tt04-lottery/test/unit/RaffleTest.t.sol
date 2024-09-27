@@ -15,6 +15,7 @@ pragma solidity ^0.8.19;
 
 import {Raffle} from "src/Raffle.sol";
 import {Test, console} from "forge-std/Test.sol";
+import {Vm} from "forge-std/Vm.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
 
@@ -151,5 +152,32 @@ contract RaffleTest is Test {
         );
 
         raffle.performUpkeep("");
+    }
+
+    function test_PerformUpkeepUpdatesRaffleStateAndEmitsRequestId() public raffleEnteredAndTimePassed {
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+
+        vm.recordLogs();
+        raffle.performUpkeep("");
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+        // 确保至少有一个日志条目
+        require(entries.length > 0, "No logs emitted");
+
+        bytes32 requestId = entries[1].topics[1];
+        Raffle.RaffleState state = raffle.getRaffleState();
+        assertEq(uint256(state), uint256(Raffle.RaffleState.CALCULATING));
+        assertEq(uint256(requestId) > 0, true);
+
+        // vm.expectEmit(true, false, false, false, address(raffle));
+        // emit Raffle.RequestIdGenerated(uint256(requestId));
+    }
+
+    modifier raffleEnteredAndTimePassed() {
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        _;
     }
 }
