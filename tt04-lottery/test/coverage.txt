@@ -1,0 +1,30 @@
+Compiling 49 files with Solc 0.8.27
+Solc 0.8.27 finished in 2.48s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+
+Ran 1 test for test/unit/Modulo.t.sol:ModuloTest
+[PASS] test_modulo() (gas: 14700)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.02ms (609.42µs CPU time)
+
+Ran 7 tests for test/unit/RaffleTest.t.sol:RaffleTest
+[PASS] test_RaffleEnteredEventIsEmitedWhenEnter() (gas: 69822)
+[PASS] test_RafflePlayersArrayChangesWhenEnter() (gas: 70211)
+[PASS] test_checkUpKeepReturnsFalseIfItHasNoBalance() (gas: 21055)
+[PASS] test_checkUpKeepReturnsFalseIfRaffleIsNotOpen() (gas: 245533)
+[PASS] test_enterRaffleRevertWhenNotEnoughEth() (gas: 20107)
+[PASS] test_notAllowPlayerEnterWhenRaffleIsCalculating() (gas: 250475)
+[PASS] test_raffleInitialState() (gas: 8040)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 331.73ms (3.61ms CPU time)
+
+Ran 2 test suites in 332.21ms (333.75ms CPU time): 8 tests passed, 0 failed, 0 skipped (8 total tests)
+| File                      | % Lines         | % Statements     | % Branches    | % Funcs        |
+|---------------------------|-----------------|------------------|---------------|----------------|
+| script/DeployRaffle.s.sol | 100.00% (13/13) | 100.00% (19/19)  | 100.00% (1/1) | 50.00% (1/2)   |
+| script/HelperConfig.s.sol | 88.24% (15/17)  | 90.48% (19/21)   | 40.00% (2/5)  | 60.00% (3/5)   |
+| script/Interactions.s.sol | 47.73% (21/44)  | 43.14% (22/51)   | 25.00% (1/4)  | 33.33% (3/9)   |
+| src/Modulo.sol            | 100.00% (3/3)   | 100.00% (6/6)    | 100.00% (0/0) | 100.00% (3/3)  |
+| src/Raffle.sol            | 62.79% (27/43)  | 64.00% (32/50)   | 33.33% (2/6)  | 70.00% (7/10)  |
+| test/mocks/LinkToken.sol  | 18.18% (2/11)   | 16.67% (2/12)    | 0.00% (0/1)   | 40.00% (2/5)   |
+| Total                     | 61.83% (81/131) | 62.89% (100/159) | 35.29% (6/17) | 55.88% (19/34) |
