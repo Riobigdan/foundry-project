@@ -34,3 +34,6 @@
 [submodule "tt04-lottery/lib/foundry-devops"]
 	path = tt04-lottery/lib/foundry-devops
 	url = https://github.com/cyfrin/foundry-devops
+[submodule "tt06-NFTs/lib/forge-std"]
+	path = tt06-NFTs/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
