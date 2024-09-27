@@ -11,7 +11,6 @@ import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/V
  * @dev This implements Chainlink VRF to ensure fairness
  */
 contract Raffle is VRFConsumerBaseV2Plus {
-    /* Library */
     using VRFV2PlusClient for VRFV2PlusClient.RandomWordsRequest;
 
     error Raffle__NotEnoughEthSent();
@@ -26,13 +25,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 playersLength
     );
 
-    /* Type Declarations */
     enum RaffleState {
         OPEN,
         CALCULATING
     }
 
-    /* Constant Variables */
     uint16 private constant REQUEST_CONFIRMATIONS = 3;
     uint32 private constant NUM_WORDS = 1;
 
@@ -42,13 +39,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint256 private immutable i_subscriptionId;
     uint32 private immutable i_callbackGasLimit;
 
-    /* State Variables */
     address payable[] private s_players;
     uint256 private s_lastTimeStamp;
     address private s_recentWinner;
     RaffleState private s_raffleState = RaffleState.OPEN;
 
-    /* Events */
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
 
