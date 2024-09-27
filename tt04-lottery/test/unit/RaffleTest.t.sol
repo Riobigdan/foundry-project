@@ -18,6 +18,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
+import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 
 contract RaffleTest is Test {
     uint256 entranceFee;
@@ -171,6 +172,21 @@ contract RaffleTest is Test {
 
         // vm.expectEmit(true, false, false, false, address(raffle));
         // emit Raffle.RequestIdGenerated(uint256(requestId));
+    }
+
+    /**
+     * @dev 测试 fulfillRandomWords 只能由 coordinator 调用
+     * 这里需要借助 Mock 合约 VRFCoordinatorV2_5Mock 来测试
+     * 因为 fulfillRandomWords 是 internal 函数，无法直接在测试中调用
+     * Fuzz test
+     */
+    function test_FulfillRandomWordsCanOnlyBeCalledByCoordinator(uint256 randomNumber)
+        public
+        raffleEnteredAndTimePassed
+    {
+        // 借助 Mock 调用 fulfillRandomWords 函数
+        vm.expectRevert(VRFCoordinatorV2_5Mock.InvalidRequest.selector);
+        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomNumber, address(raffle));
     }
 
     modifier raffleEnteredAndTimePassed() {

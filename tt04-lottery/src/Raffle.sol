@@ -157,7 +157,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     }
 
     /**
-     * @dev 回调函数 由 VRFCoordinator 调用 rawFulfillRandomWords
+     * @dev 回调函数 由 VRFCoordinator 调用 fulfillRandomWords
      * @param randomWords 随机数 calldata 数组
      */
     function fulfillRandomWords(
