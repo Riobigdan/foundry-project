@@ -7,5 +7,8 @@ contract ZeppelinToken is ERC20 {
     constructor(uint256 initialSupply) ERC20("ZeppelinToken", "ZP") {
         _mint(msg.sender, initialSupply);
     }
+
     
 }
+
+  
