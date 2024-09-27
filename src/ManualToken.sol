@@ -5,7 +5,7 @@ contract ManualToken {
     mapping(address => uint256) private s_balances;
 
     function name() public pure returns (string memory) {
-        return "RBToken";
+        return "ManualToken";
     }
 
     function totalSupply() public pure returns (uint256) {
@@ -30,5 +30,4 @@ contract ManualToken {
         s_balances[_to] += _value;
         return true;
     }
-    
 }
