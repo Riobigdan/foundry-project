@@ -19,6 +19,8 @@ forge coverage > test/coverage.txt
 forge coverage --report debug > test/coverage_debug.txt
 ```
 
+---
+
 ## 功能
 
 - 用户支付入场费参与抽奖

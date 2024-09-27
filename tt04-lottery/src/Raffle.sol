@@ -17,12 +17,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle__TransferFailed();
     error Raffle__RaffleNotOpen();
     error Raffle__TooEarly(
-        uint256 currentTime,
-        uint256 lastTimeStamp,
-        RaffleState raffleState,
-        uint256 balance,
-        uint256 raffleStateUint,
-        uint256 playersLength
+        uint256 currentTime, uint256 lastTimeStamp, uint256 balance, uint256 raffleStateUint, uint256 playersLength
     );
 
     enum RaffleState {
@@ -112,19 +107,14 @@ contract Raffle is VRFConsumerBaseV2Plus {
     }
 
     /**
-     * @dev 由 ChainLink automation 调用 执行开奖
-     * @param performData 检查数据
+     * @dev 由 ChainLink automation 调用执行开奖。"perform"意味着执行或实施。
+     * @param performData 执行数据
      */
     function performUpkeep(bytes calldata performData) external {
         (bool upkeepNeeded,) = checkUpkeep(performData);
         if (!upkeepNeeded) {
             revert Raffle__TooEarly(
-                block.timestamp,
-                s_lastTimeStamp,
-                s_raffleState,
-                address(this).balance,
-                uint256(s_raffleState),
-                s_players.length
+                block.timestamp, s_lastTimeStamp, address(this).balance, uint256(s_raffleState), s_players.length
             );
         }
         pickWinner();
@@ -137,12 +127,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     function pickWinner() private returns (uint256 requestId) {
         if (block.timestamp - s_lastTimeStamp < i_interval) {
             revert Raffle__TooEarly(
-                block.timestamp,
-                s_lastTimeStamp,
-                s_raffleState,
-                address(this).balance,
-                uint256(s_raffleState),
-                s_players.length
+                block.timestamp, s_lastTimeStamp, address(this).balance, uint256(s_raffleState), s_players.length
             );
         }
         s_raffleState = RaffleState.CALCULATING;
@@ -211,5 +196,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     function getRaffleState() public view returns (RaffleState) {
         return s_raffleState;
+    }
+
+    function getLastTimeStamp() public view returns (uint256) {
+        return s_lastTimeStamp;
     }
 }
