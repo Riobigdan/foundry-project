@@ -37,3 +37,6 @@
 [submodule "tt06-NFTs/lib/forge-std"]
 	path = tt06-NFTs/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "tt06-NFTs/lib/openzeppelin-contracts"]
+	path = tt06-NFTs/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
