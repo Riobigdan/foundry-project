@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 // https://eips.ethereum.org/EIPS/eip-721
-contract BsicNFft is ERC721 {
+contract BasicNft is ERC721 {
     // token Counter
     uint256 private s_tokenCounter;
 
