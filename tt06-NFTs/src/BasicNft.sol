@@ -10,17 +10,28 @@ contract BsicNFft is ERC721 {
 
     // Mapping from token ID to the owner address
     mapping(uint256 => address) private s_tokenIdToOwner;
+    mapping(uint256 => string) private s_tokenIdToUri;
 
     constructor() ERC721("Dadan", "DADAN") {
         s_tokenCounter = 0;
     }
+    /**
+     * @dev 铸造NFT
+     * @param tokenUri NFT的URI
+     */
 
-    function mintNft() public {
-        _mint(msg.sender, s_tokenCounter);
+    function mintNft(string memory tokenUri) public {
+        s_tokenIdToUri[s_tokenCounter] = tokenUri;
+        _safeMint(msg.sender, s_tokenCounter);
         s_tokenCounter++;
     }
 
-    function tokenURI(uint256 tokenId) public pure override returns (string memory) {
-        return "";
+    /**
+     * @dev 返回NFT的URI
+     * @param tokenId NFT的ID
+     * @return NFT的URI
+     */
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        return s_tokenIdToUri[tokenId];
     }
 }
